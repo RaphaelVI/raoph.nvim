@@ -283,7 +283,6 @@ require('lazy').setup({
       },
     },
   },
-
   {
     'nvim-tree/nvim-tree.lua',
     version = '*',
@@ -292,7 +291,32 @@ require('lazy').setup({
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require('nvim-tree').setup {}
+      require('nvim-tree').setup {
+        sort = {
+          sorter = 'case_sensitive',
+        },
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      }
+
+      local api = require 'nvim-tree.api'
+
+      vim.keymap.set('n', '<leader>d', api.tree.open, { desc = 'Open [D]irectory' })
+
+      vim.api.nvim_create_autocmd('VimEnter', {
+        desc = 'Open nvim-tree on startup',
+        group = vim.api.nvim_create_augroup('nvim-tree-open', { clear = true }),
+        callback = function()
+          api.tree.open()
+        end,
+      })
     end,
   },
 
